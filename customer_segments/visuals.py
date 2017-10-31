@@ -14,10 +14,6 @@ import matplotlib.cm as cm
 import pandas as pd
 import numpy as np
 
-def foo():
-	print "foo"
-
-
 def distribution(data, transformed = False):
     """
     Visualization code for displaying skewed distributions of features
