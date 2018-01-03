@@ -22,8 +22,8 @@ class LearningAgent(Agent):
         ###########
         ## TO DO ##
         ###########
-        # Set any additional class parameters as needed
-        self.trial = env.t
+        # Set any additional class parameters as needed 
+        self.trial = 0
 
 
     def reset(self, destination=None, testing=False):
@@ -40,6 +40,18 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
+        
+        #self.e = 0.999
+        #self.epsilon = math.pow(self.e, self.trial)
+        
+        #else:
+        #maxq_lst=[]
+        #for act in self.valid_actions:
+        #    if self.Q[state][act] == self.get_maxQ(state):
+       #          maxq_lst.append(act)
+    #  action = random.choice(maxq_lst)
+        # return maxQ = max(self.Q[state].values())
+        
         
         if testing == True:
             self.epsilon = 0
@@ -99,6 +111,13 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
+        
+        if str(state) in self.Q:
+            print "InQ"
+        else:
+            pass
+   #         self.Q[str(state)] = 
+        
 
         return
 
