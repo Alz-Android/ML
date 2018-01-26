@@ -2,4 +2,4 @@
 | State-action rewards from Q-Learning
 \-----------------------------------------
 
-("('left', 'red', 'right', None)", None)
+("('right', 'green', 'left', None)", 'forward')

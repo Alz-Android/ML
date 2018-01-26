@@ -9,7 +9,7 @@ class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
         This is the object you will be modifying. """ 
 
-    def __init__(self, env, learning=True, epsilon=1, alpha=0.5):
+    def __init__(self, env, learning=True, epsilon=0.5, alpha=0.5):
         super(LearningAgent, self).__init__(env)     # Set the agent in the evironment 
         self.planner = RoutePlanner(self.env, self)  # Create a route planner
         self.valid_actions = self.env.valid_actions  # The set of valid actions
@@ -25,6 +25,7 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed 
         self.trial = 0
+        self.maxQ = 0
 
 
     def reset(self, destination=None, testing=False):
@@ -85,9 +86,12 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-        
-        maxQ = max([v for k, v in self.Q.iteritems() if k[0]==state])
-        return maxQ 
+         
+        for act in self.valid_actions:
+            Qvalue = self.Q[str(state), act]
+            if Qvalue > self.maxQ:
+                self.maxQ = Qvalue
+        return self.maxQ 
 
 
     def createQ(self, state):
@@ -114,13 +118,18 @@ class LearningAgent(Agent):
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
         randomActionProbability = random.randint(0, 100)
+        action = None
         
         if(not self.learning):
             action = random.choice(self.valid_actions)
         elif (randomActionProbability > self.epsilon):
             action = random.choice(self.valid_actions)
         else:
-            action = random.choice(self.valid_actions) #self.get_maxQ(self, state) 
+            for act in self.valid_actions:
+                if self.Q[str(state), act] == self.get_maxQ(state):
+                    action = act 
+                    
+                    #self.get_maxQ(self, state) 
             
             # we need the action associated with that Q value
             # if 2 maxQvalues, choose randomly
@@ -146,6 +155,10 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
+        # new_q = old_q + self.alpha * (prev_reward)
+
+
+        self.Q[str(state), action] = self.Q[str(state), action] + self.alpha * reward
 
         return
 
@@ -199,14 +212,14 @@ def run():
     #   optimized    - set to True to change the default log file name
     
     print "learning"
-    sim = Simulator(env, update_delay=0.01, display=False, log_metrics=True, optimized=False)
+    sim = Simulator(env, update_delay=0.01, display=False, log_metrics=True, optimized=True)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10)
+    sim.run(n_test=40)
 
 
 if __name__ == '__main__':
