@@ -9,7 +9,7 @@ class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
         This is the object you will be modifying. """ 
 
-    def __init__(self, env, learning=True, epsilon=0.5, alpha=0.5):
+    def __init__(self, env, learning=True, epsilon=0, alpha=0.6):
         super(LearningAgent, self).__init__(env)     # Set the agent in the evironment 
         self.planner = RoutePlanner(self.env, self)  # Create a route planner
         self.valid_actions = self.env.valid_actions  # The set of valid actions
@@ -48,9 +48,12 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.trial+=1
-            self.epsilon -= 0.05
-        
+            self.trial +=1
+            self.epsilon = 1/math.pow(self.trial,2)
+            print("&&&&&&&&&&&&&&&")
+            print(self.trial)
+            print(self.epsilon)
+            
         return None
 
     def build_state(self):
@@ -106,7 +109,7 @@ class LearningAgent(Agent):
         
         if str(state) not in self.Q:
             for action in self.valid_actions:
-                self.Q[str(state), action] # = 0.0    
+                self.Q[str(state), action]
         return
 
 
@@ -129,7 +132,6 @@ class LearningAgent(Agent):
                 if self.Q[str(state), act] == self.get_maxQ(state):
                     action = act 
                     
-                    #self.get_maxQ(self, state) 
             
             # we need the action associated with that Q value
             # if 2 maxQvalues, choose randomly
@@ -158,7 +160,7 @@ class LearningAgent(Agent):
         # new_q = old_q + self.alpha * (prev_reward)
 
 
-        self.Q[str(state), action] = self.Q[str(state), action] + self.alpha * reward
+    #    self.Q[str(state), action] = self.Q[str(state), action] + self.alpha * reward
 
         return
 
@@ -187,7 +189,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment()
+    env = Environment(verbose=True)
     
     ##############
     # Create the driving agent
@@ -219,7 +221,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=40)
+    sim.run(n_test=20)
 
 
 if __name__ == '__main__':
