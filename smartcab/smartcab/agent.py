@@ -160,7 +160,7 @@ class LearningAgent(Agent):
         # new_q = old_q + self.alpha * (prev_reward)
 
 
-    #    self.Q[str(state), action] = self.Q[str(state), action] + self.alpha * reward
+        self.Q[str(state), action] = self.Q[str(state), action] + self.alpha * reward
 
         return
 
