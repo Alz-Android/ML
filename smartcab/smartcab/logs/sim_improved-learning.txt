@@ -2,4 +2,4 @@
 | State-action rewards from Q-Learning
 \-----------------------------------------
 
-("('right', 'red', 'right', 'left')", 'left')
+("('left', 'green', 'right', 'right')", 'left')

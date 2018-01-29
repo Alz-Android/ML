@@ -9,7 +9,7 @@ class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
         This is the object you will be modifying. """ 
 
-    def __init__(self, env, learning=True, epsilon=0, alpha=1):
+    def __init__(self, env, learning=False, epsilon=1, alpha=0.5):
         super(LearningAgent, self).__init__(env)     # Set the agent in the evironment 
         self.planner = RoutePlanner(self.env, self)  # Create a route planner
         self.valid_actions = self.env.valid_actions  # The set of valid actions
@@ -49,7 +49,7 @@ class LearningAgent(Agent):
             self.alpha = 0
         else:
             self.trial +=1
-            self.epsilon = 1/self.trial # math.pow(self.trial,2)
+            self.epsilon -=0.048       # self.epsilon = 1/math.pow(self.trial,2)
             print("&&&&&&&&&&&&&&&")
             print(self.trial)
             print(self.epsilon)
@@ -123,14 +123,21 @@ class LearningAgent(Agent):
         randomActionProbability = random.randint(0, 100)
         action = None
         
+        print("randomActionProbability {}".format(randomActionProbability))
+        print("                 epsilon {}".format(self.epsilon * 100))
+        
         if(not self.learning):
             action = random.choice(self.valid_actions)
-        elif (randomActionProbability > self.epsilon):
-            action = random.choice(self.valid_actions)
-        else:
-            for act in self.valid_actions:
-                if self.Q[str(state), act] == self.get_maxQ(state):
-                    action = act 
+            print("choice 1: no learn {}".format(action))
+        else: 
+            if (randomActionProbability > self.epsilon * 100):
+                action = random.choice(self.valid_actions)
+                print("choice 2: learn - random action epsilon {}".format(action))
+            else:
+                for act in self.valid_actions:
+                    if self.Q[str(state), act] == self.get_maxQ(state):
+                        action = act
+                        print("choice 3: learn - highest Q {}".format(action))
                     
             
             # we need the action associated with that Q value
@@ -161,7 +168,8 @@ class LearningAgent(Agent):
 
 
         self.Q[str(state), action] = self.Q[str(state), action] + self.alpha * reward
-
+        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^:")
+      #  print(self.Q)
         return
 
 
@@ -197,7 +205,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent)
+    agent = env.create_agent(LearningAgent, learning=True, epsilon=1, alpha=0.6)
     
     ##############
     # Follow the driving agent
