@@ -16,7 +16,7 @@ class LearningAgent(Agent):
 
         # Set parameters of the learning agent
         self.learning = learning # Whether the agent is expected to learn
-        self.Q = defaultdict(float)          # Create a Q-table which will be a dictionary of tuples
+        self.Q = dict()         # Create a Q-table which will be a dictionary of tuples
         self.epsilon = epsilon   # Random exploration factor
         self.alpha = alpha       # Learning factor
 
@@ -89,11 +89,14 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-         
+        self.maxQ = 0 
+        
+        
+ #       self.maxQ = max(self.Q[state].values())
+        
         for act in self.valid_actions:
-            Qvalue = self.Q[str(state), act]
-            if Qvalue > self.maxQ:
-                self.maxQ = Qvalue
+            if self.Q[(state, act)] > self.maxQ:
+                self.maxQ = self.Q[(state, act)]
         return self.maxQ 
 
 
@@ -107,9 +110,10 @@ class LearningAgent(Agent):
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
         
-        if str(state) not in self.Q:
+        if str(state) not in self.Q.keys():
             for action in self.valid_actions:
-                self.Q[str(state), action]
+                self.Q[(state, action)] = dict()
+                self.Q[(state, action)] = 0.0
         return
 
 
@@ -125,6 +129,10 @@ class LearningAgent(Agent):
         
         print("randomActionProbability {}".format(randomActionProbability))
         print("                 epsilon {}".format(self.epsilon * 100))
+        print("self.Q[TEST>> {}".format(self.Q[(state, action)]))
+
+#        print("self.Q[TEST2>> {}".format(self.Q[(state)]))
+        
         
         if(not self.learning):
             action = random.choice(self.valid_actions)
@@ -135,15 +143,16 @@ class LearningAgent(Agent):
                 print("choice 2: learn - random action epsilon {}".format(action))
             else:
                 for act in self.valid_actions:
-                    if self.Q[str(state), act] == self.get_maxQ(state):
+                    print("act {}".format(act))
+                    print("self.Q[str(state), act] {}".format(self.Q[(state, action)]))
+                    print("self.get_maxQ(state) {}".format(self.get_maxQ(state)))
+                    if self.Q[(state, action)] == self.get_maxQ(state):
                         action = act
                         print("choice 3: learn - highest Q {}".format(action))
-                    
-            
+                                
             # we need the action associated with that Q value
             # if 2 maxQvalues, choose randomly
             
-
         ########### 
         ## TO DO ##
         ###########
@@ -167,7 +176,8 @@ class LearningAgent(Agent):
         # new_q = old_q + self.alpha * (prev_reward)
 
 
-        self.Q[str(state), action] = self.Q[str(state), action] + self.alpha * reward
+        self.Q[(state, action)] = self.Q[(state, action)] + self.alpha * reward
+
         print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^:")
       #  print(self.Q)
         return
@@ -205,7 +215,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, epsilon=1, alpha=0.6)
+    agent = env.create_agent(LearningAgent, learning=True, epsilon=1, alpha=0.8)
     
     ##############
     # Follow the driving agent
@@ -221,7 +231,6 @@ def run():
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
     
-    print "learning"
     sim = Simulator(env, update_delay=0.01, display=False, log_metrics=True, optimized=True)
     
     ##############
