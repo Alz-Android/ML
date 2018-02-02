@@ -119,6 +119,9 @@ class LearningAgent(Agent):
         randomActionProbability = random.randint(0, 100)
         action = None
                 
+        print("self.Q[state].items() {}".format(self.Q[state].items()))
+        print("self.valid_actions {}".format(self.valid_actions))
+        
         if(not self.learning):
             action = random.choice(self.valid_actions)
             print("choice 1: no learn {}".format(action))
@@ -151,12 +154,11 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        # new_q = old_q + self.alpha * (prev_reward)
         
         if self.learning == True:
             self.Q[state][action] = (1 - self.alpha) * self.Q[state][action] + self.alpha * reward
  
-       return
+        return
 
 
     def update(self):

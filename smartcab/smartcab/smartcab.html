@@ -18040,6 +18040,29 @@ kq7HM06QAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><BR>
+Sources used for understanding RL and this project:</p>
+<p>RL in general:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=3T5eCou2erg">https://www.youtube.com/watch?v=3T5eCou2erg</a></li>
+<li><a href="https://www.youtube.com/watch?v=2pWv7GOvuf0">https://www.youtube.com/watch?v=2pWv7GOvuf0</a></li>
+</ul>
+<p>ML forum:</p>
+<ul>
+<li><a href="https://discussions.udacity.com/t/reliability-and-safety-not-improving-code-issue-or-tuning/501950">https://discussions.udacity.com/t/reliability-and-safety-not-improving-code-issue-or-tuning/501950</a></li>
+<li><a href="https://discussions.udacity.com/t/q6-whats-the-difference-between-createq-and-build-state/203076/7">https://discussions.udacity.com/t/q6-whats-the-difference-between-createq-and-build-state/203076/7</a></li>
+<li><a href="https://discussions.udacity.com/t/question-8-validating-the-optimal-policy/275246/2">https://discussions.udacity.com/t/question-8-validating-the-optimal-policy/275246/2</a></li>
+<li><a href="https://discussions.udacity.com/t/not-clear-about-what-value-iteration-update-rule-in-learn-method-in-agent-py-means/242021">https://discussions.udacity.com/t/not-clear-about-what-value-iteration-update-rule-in-learn-method-in-agent-py-means/242021</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <hr>
 <h3 id="Optional:-Future-Rewards---Discount-Factor,-'gamma'">Optional: Future Rewards - Discount Factor, <code>'gamma'</code><a class="anchor-link" href="#Optional:-Future-Rewards---Discount-Factor,-'gamma'">&#182;</a></h3><p>Curiously, as part of the Q-Learning algorithm, you were asked to <strong>not</strong> use the discount factor, <code>'gamma'</code> in the implementation. Including future rewards in the algorithm is used to aid in propagating positive rewards backwards from a future state to the current state. Essentially, if the driving agent is given the option to make several actions to arrive at different states, including future rewards will bias the agent towards states that could provide even more rewards. An example of this would be the driving agent moving towards a goal: With all actions and rewards equal, moving towards the goal would theoretically yield better rewards if there is an additional reward for reaching the goal. However, even though in this project, the driving agent is trying to reach a destination in the allotted time, including future rewards will not benefit the agent. In fact, if the agent were given many trials to learn, it could negatively affect Q-values!</p>
 
