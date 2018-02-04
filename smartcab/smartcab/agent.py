@@ -3,7 +3,6 @@ import math
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
-from collections import defaultdict
 
 class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
@@ -48,9 +47,8 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.trial +=1.0
-            self.epsilon -=0.008       
-            
+            self.epsilon = math.pow(0.99,self.trial)
+            self.trial += 1        
         return None
 
     def build_state(self):
@@ -61,7 +59,7 @@ class LearningAgent(Agent):
         # Collect data about the environment
         waypoint = self.planner.next_waypoint() # The next waypoint 
         inputs = self.env.sense(self)           # Visual input - intersection light and traffic
-        deadline = self.env.get_deadline(self)  # Remaining deadline
+       # deadline = self.env.get_deadline(self)  # Remaining deadline
 
         ########### 
         ## TO DO ##
@@ -116,17 +114,14 @@ class LearningAgent(Agent):
         # Set the agent state and default action
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
-        randomActionProbability = random.randint(0, 100)
+        randomActionProbability = random.random()
         action = None
-                
-        print("self.Q[state].items() {}".format(self.Q[state].items()))
-        print("self.valid_actions {}".format(self.valid_actions))
-        
+
         if(not self.learning):
             action = random.choice(self.valid_actions)
             print("choice 1: no learn {}".format(action))
         else: 
-            if (randomActionProbability < self.epsilon * 100):
+            if (randomActionProbability < self.epsilon):
                 action = random.choice(self.valid_actions)
                 print("choice 2: learn - random action epsilon {}".format(action))
             else:
@@ -193,7 +188,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, epsilon=0.9, alpha=0.5)
+    agent = env.create_agent(LearningAgent, learning=True, epsilon=1, alpha=0.5)
     
     ##############
     # Follow the driving agent
@@ -216,7 +211,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10, tolerance=0.2)
+    sim.run(n_test=100, tolerance=0.0005)
 
 
 if __name__ == '__main__':
